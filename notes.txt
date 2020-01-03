@@ -1,0 +1,157 @@
+https://www.youtube.com/watch?v=-QapNzUE4V0
+composer require "laravelcollective/html"
+
+chrome://flags/#allow-insecure-localhost
+https://ckeditor.com/docs/ckeditor4/latest/guide/dev_package_managers.html#composer
+
+=========================================================
+Installing ckeditor (WISIWIG)
+
+pste below inside require of composer.json
+"ckeditor/ckeditor": "4.*"
+
+Run composer update from cmd
+copy ckeditor folder from /vendor and paste to public folder
+
+In app.layout put below line
+<script src="{{asset('ckeditor/ckeditor/ckeditor.js')}}"></script>
+
+Before end of body tag paste
+<script>
+	CKEDITOR.replace( 'article-ckeditor' );
+</script>
+
+Add a textarea field with id = article-ckeditor
+
+Another way to make ckeditor work with latest laravel is https://www.youtube.com/watch?v=-QapNzUE4V0
+Check comment section of above video
+
+My simple solution for those who have problem with the editor not showing:
+
+ <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+
+    <script>
+
+        CKEDITOR.replace( 'article-ckeditor' );
+
+    </script>
+
+Change src to {{asset('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}. 
+Be sure that your files were copied like in Brad's terminal
+
+
+==================================================================
+Create post without laravel collective https://www.youtube.com/watch?v=-QapNzUE4V0
+
+Check comments of above video
+
+<form method="post" action="{{ route('posts.store') }}">
+
+        <div class="form-group">
+
+            @csrf            
+            <label for="title">Title</label>
+
+            <input type="text" class="form-control" name="title" placeholder="Title"/>
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="body">Body</label>
+
+            <textarea class="form-control" name="body" cols="30" rows="10" placeholder="Body Text"></textarea>
+
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+ </form>
+===================================================================
+Edit and Delete post  https://www.youtube.com/watch?v=PAP8IS_ak6w
+
+this form works in laravel 5.8.
+<h1>Edit Post</h1>
+
+<form action="{{ route('posts.update',$post->id) }}" method="POST">
+
+        <div class="form-group">
+
+        @method('PUT')
+
+        @csrf          
+
+            <label for="title">Title</label>
+
+            <input type="text" class="form-control" value="{{ $post->title }}" name="title" placeholder="Title"/>
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="body">Body</label>
+
+            <textarea id="article-ckeditor" class="form-control" name="body" cols="30" rows="10" placeholder="Detail">{{ $post->body }}</textarea>
+
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+ </form>
+
+** The code of delete button. It works in 5.8
+
+<form action="{{ route('posts.destroy',$post->id) }}" method="POST">
+
+            @csrf
+
+            @method('DELETE')
+
+            <!-- edit button -->
+
+                <a href="{{route('posts.edit', $post->id)}}" class="btn btn-info">Edit</a>
+
+            <!-- delete button -->
+                <button type="submit" class="btn btn-danger float-right">Delete</button>
+
+        </form>
+=================================================================================================
+		Laravel 6 auth is as methoned in below link or comments of this video
+		https://www.youtube.com/watch?v=ORus3-By4lk
+		https://dev.to/msamgan/php-artisan-make-auth-in-laravel-6-0-hc		
+=================================================================================================
+Hosting Laravel on hostinger.in
+https://stackoverflow.com/questions/50340736/how-can-i-deploy-my-laravel-project-to-root-folder-in-hostinger-with-git
+Relationship between tables can be added by creating function inside Models and specifying relationship.
+After doing that we can easily query based on relationships.
+check home controller index method.
+========================================
+To restrict any controller's route Before login, call middleware auth from controller contructor
+check posts controller for example, also to allow any route check posts controller.
+
+To hide any button befor login call Auth::guest method check show.php
+
+To stop any user to delete or edit other user post use another if in show.php
+
+To stop user going to /posts/15/edit go to posts controller edit function and add check
+for correct user.
+================================================
+File upload in laravel
+https://www.itsolutionstuff.com/post/laravel-6-file-upload-tutorial-exampleexample.html
+
+create a multipart form in create.php
+than create a column cover_image in post table using migration
+php artisan make:migration add_cover_image_to_posts
+than go to the newly created migration file and add in up and down method logic
+
+When user upload file insert name of file to cover_image column and store the actual file on file system
+after that run php artisan migrate
+
+inside posts controller store method add validation for image only, optional and max of 1999 bytes(slightly less than 2MB)
+in the same method add logic to handle file upload
+
+create a simlink from storage/public to public folder for accessing the uploaded images
+use this command to create the simlink php artisan storage:link
